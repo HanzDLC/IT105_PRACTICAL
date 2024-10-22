@@ -1,58 +1,64 @@
 <?php
 class Model
 {
-	public $db=null;
-	function __construct()
-	{
-		try
-		{
-			$this->db = new mysqli('localhost', 'root', '', 'dogs');
-		}
-		catch(mysqli_sql_exception $e)
-		{
-			exit('Database connection could not be established.');
-		}
-	}
+    public $db = null;
 
-		public function getBookList() 
-	    {
-	        $data = array();
+    function __construct()
+    {
+        try {
+            $this->db = new mysqli('localhost', 'root', '', 'dogs');
+        } catch (mysqli_sql_exception $e) {
+            exit('Database connection could not be established.');
+        }
+    }
 
-			$queryGetBooks = mysqli_query($this->db,"SELECT * from tblbooks");
+    public function getDogList()
+    {
+        $data = array();
+        $queryGetDogs = mysqli_query($this->db, "SELECT * FROM dog_records");
 
-			while($getRow=mysqli_fetch_object($queryGetBooks))    		
-			{    			
-			  $data[] = $getRow; // add the row in to the results (data) array
-			}
-			return $data;     
-	    }
+        while ($getRow = mysqli_fetch_object($queryGetDogs)) {
+            $data[] = $getRow; // Add the row to the results (data) array
+        }
+        return $data;
+    }
 
-		public function getDogList()
-	{
-		$data = array();
+    public function getDogsByBreed($breed = null)
+    {
+        $data = array();
+        if ($breed) {
+            // Prepare statement to prevent SQL injection
+            $stmt = $this->db->prepare("SELECT * FROM dog_records WHERE dog_breed = ?");
+            $stmt->bind_param("s", $breed);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-		$queryGetDogs = mysqli_query($this->db,"SELECT * from dog_records");
+            while ($getRow = $result->fetch_object()) {
+                $data[] = $getRow; // Add the row to the results (data) array
+            }
+        } else {
+            return $this->getDogList(); // Return all dogs if no breed specified
+        }
+        return $data;
+    }
 
-		while($getRow = mysqli_fetch_object($queryGetDogs))    		
-		{    			
-			$data[] = $getRow;  // add the row to the results (data) array
-		}
-		return $data;     
-	}
+    public function fetchDogByName($dog_name = null)
+    {
+        $dog = null;
 
-	public function getDogsByBreed($breed = null)
-	{
-		$data = array();
+        if ($dog_name) {
+            // Prepare the SQL statement to prevent SQL injection
+            $stmt = $this->db->prepare("SELECT * FROM dog_records WHERE dog_name = ?");
+            $stmt->bind_param("s", $dog_name); // Bind the dog name to the query
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-		if($breed) {
-			$queryGetDogs = mysqli_query($this->db, "SELECT * FROM dog_records WHERE dog_breed = '$breed'");
-		} else {
-			$queryGetDogs = mysqli_query($this->db, "SELECT * FROM dog_records");
-		}
+            if ($result && $result->num_rows > 0) {
+                $dog = $result->fetch_object(); // Get the specific dog details
+            }
+        }
 
-		while($getRow = mysqli_fetch_object($queryGetDogs)) {
-			$data[] = $getRow; // Add the row to the results (data) array
-		}
-		return $data;
-	}
+        return $dog;
+    }
 }
+?>

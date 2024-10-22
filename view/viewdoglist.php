@@ -6,7 +6,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            text-align: center; 
+            text-align: center;
         }
 
         th, td {
@@ -20,13 +20,13 @@
         }
 
         /* Set column widths */
-        th:nth-child(1), td:nth-child(1) { width: 15%; } 
-        th:nth-child(2), td:nth-child(2) { width: 15%; } 
+        th:nth-child(1), td:nth-child(1) { width: 15%; }
+        th:nth-child(2), td:nth-child(2) { width: 15%; }
         th:nth-child(3), td:nth-child(3) { width: 10%; }
-        th:nth-child(4), td:nth-child(4) { width: 10%; } 
-        th:nth-child(5), td:nth-child(5) { width: 20%; } 
-        th:nth-child(6), td:nth-child(6) { width: 15%; } 
-        th:nth-child(7), td:nth-child(7) { width: 15%; } 
+        th:nth-child(4), td:nth-child(4) { width: 10%; }
+        th:nth-child(5), td:nth-child(5) { width: 20%; }
+        th:nth-child(6), td:nth-child(6) { width: 15%; }
+        th:nth-child(7), td:nth-child(7) { width: 15%; }
 
         /* Optional: Hover effect */
         tbody tr:hover {
@@ -49,22 +49,20 @@
         </tr>
     </thead>
     <tfoot>
-        <tr>
-            
-        </tr>
+        <tr></tr>
     </tfoot>
     <tbody>
         <?php
             if (!empty($dogs)) {
-                foreach($dogs as $dog) {
+                foreach ($dogs as $dog) {
                     echo "<tr>";
-                        echo "<td>". htmlspecialchars($dog->dog_name) ."</td>";
-                        echo "<td>". htmlspecialchars($dog->dog_breed) ."</td>";
-                        echo "<td>". htmlspecialchars($dog->dog_age) ."</td>";
-                        echo "<td>". htmlspecialchars($dog->dog_weight) ."</td>";
-                        echo "<td>". htmlspecialchars($dog->owner_name) ."</td>";
-                        echo "<td>". htmlspecialchars($dog->owner_phone) ."</td>";
-                        echo "<td>". htmlspecialchars($dog->vaccination_status) ."</td>";
+                    echo "<td><a href='index.php?command=viewSpecific&dog_name=" . urlencode($dog->dog_name) . "'>" . htmlspecialchars($dog->dog_name) . "</a></td>";
+                    echo "<td>" . htmlspecialchars($dog->dog_breed) . "</td>";
+                    echo "<td>" . htmlspecialchars($dog->dog_age) . "</td>";
+                    echo "<td>" . htmlspecialchars($dog->dog_weight) . "</td>";
+                    echo "<td>" . htmlspecialchars($dog->owner_name) . "</td>";
+                    echo "<td>" . htmlspecialchars($dog->owner_phone) . "</td>";
+                    echo "<td>" . htmlspecialchars($dog->vaccination_status) . "</td>";
                     echo "</tr>";
                 }
             } else {
